@@ -150,5 +150,17 @@ class LoginExecutor:
     def _finalize_login(self) -> Response:
         sessionid = self.session.cookies['sessionid']
         redir = f'{SteamUrl.COMMUNITY_URL}/login/home/?goto='
-        finalized_data = {'nonce': self.refresh_token, 'sessionid': sessionid, 'redir': redir}
-        return self.session.post(SteamUrl.LOGIN_URL + '/jwt/finalizelogin', data=finalized_data)
+        finalized_data = {
+            'nonce': self.refresh_token,
+            'sessionid': sessionid,
+            'redir': redir
+        }
+        headers = {
+            'Referer': f'{SteamUrl.COMMUNITY_URL}/',
+            'Origin': SteamUrl.COMMUNITY_URL
+        }
+        return self.session.post(
+            SteamUrl.LOGIN_URL + '/jwt/finalizelogin',
+            data=finalized_data,
+            headers=headers
+        )
